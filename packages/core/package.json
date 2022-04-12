@@ -1,0 +1,11 @@
+{
+  "name": "@md-report/core",
+  "version": "0.0.1",
+  "description": "Write reports in markdown, and get them in docx.",
+  "license": "MIT",
+  "author": "syy11cn<syy11cn@outlook.com>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

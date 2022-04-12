@@ -1,0 +1,10 @@
+{
+  "name": "@md-report/types",
+  "version": "0.0.1",
+  "description": "TypeScript definitions for md-report.",
+  "license": "MIT",
+  "author": "syy11cn<syy11cn@outlook.com>",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
