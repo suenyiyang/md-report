@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES2017"
+    "target": "ES2017",
+    "paths": {
+      "@md-report/types": ["./packages/types/src/index.ts"],
+      "@md-report/parser": ["./packages/parser/src/index.ts"],
+      "@md-report/core": ["./packages/core/src/index.ts"]
+    }
   }
 }
