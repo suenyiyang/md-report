@@ -1,18 +1,14 @@
-export interface ReportMarkdown{
-  filepath: string
-  frontmatter: ReportDocumentConfig
-  raw: string
-}
-
-export interface ReportDocument{
-  raw: string
-  config: ReportDocumentConfig
-}
-
-export interface ReportDocumentConfig{
-  logo?: string
+export interface ReportConfig{
   title: string
+  logo?: string
   subtitle?: string
-  subtitlePosition?: string
-  tocLevel?: string
+  subtitlePos?: 'up' | 'down'
+  coverInfo?: Record<string, any>
+  disablePageNumber?: boolean
+  disablePageHeader?: boolean
+}
+
+export interface ReportMarkdown{
+  raw: string
+  frontmatter: ReportConfig
 }
