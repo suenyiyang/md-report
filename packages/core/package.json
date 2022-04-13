@@ -7,5 +7,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "carbon-now-cli": "^1.4.0",
+    "docx": "^7.3.0"
   }
 }
