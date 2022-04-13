@@ -9,10 +9,14 @@
   ],
   "devDependencies": {
     "@antfu/eslint-config": "^0.20.2",
-    "@md-report/types": "workspace:*",
     "@md-report/core": "workspace:*",
     "@md-report/parser": "workspace:*",
+    "@md-report/types": "workspace:*",
+    "@types/node": "^17.0.23",
     "eslint": "^8.13.0",
+    "markdown-it": "^12.3.2",
+    "rimraf": "^3.0.2",
+    "tsup": "^5.12.5",
     "typescript": "^4.6.3"
   },
   "engines": {
