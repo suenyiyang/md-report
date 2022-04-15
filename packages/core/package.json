@@ -5,11 +5,21 @@
   "license": "MIT",
   "author": "syy11cn<syy11cn@outlook.com>",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf dist && tsup src/**/*.ts --format cjs,esm --dts --splitting --no-shims",
+    "dev": "nr build --watch",
+    "prepublishOnly": "nr build"
   },
   "dependencies": {
     "carbon-now-cli": "^1.4.0",
-    "docx": "^7.3.0"
+    "docx": "^7.3.0",
+    "file-saver": "^2.0.5"
   }
 }
