@@ -4,6 +4,16 @@
   "description": "TypeScript definitions for md-report.",
   "license": "MIT",
   "author": "syy11cn<syy11cn@outlook.com>",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "rimraf dist && tsup src/*.ts --format cjs,esm --dts --splitting --no-shims",
     "dev": "nr build --watch",

@@ -2,11 +2,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "pnpm -r --filter ./packages --parallel run dev",
+    "dev": "pnpm -r --filter ./packages run dev",
     "test": "vitest test"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "playground"
   ],
   "devDependencies": {
     "@antfu/eslint-config": "^0.20.2",
