@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "target": "ES2017",
+    "baseUrl": ".",
+    "moduleResolution": "node",
     "paths": {
       "@md-report/types": ["./packages/types/src/index.ts"],
       "@md-report/parser": ["./packages/parser/src/index.ts"],
