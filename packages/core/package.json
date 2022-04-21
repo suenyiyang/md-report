@@ -14,6 +14,9 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "bin": {
+    "mdreport": "./bin/index.js"
+  },
   "scripts": {
     "build": "rimraf dist && tsup src/*.ts --format cjs,esm --dts --splitting --no-shims",
     "dev": "nr build --watch",
@@ -21,6 +24,9 @@
   },
   "dependencies": {
     "docx": "^7.3.0",
-    "file-saver": "^2.0.5"
+    "file-saver": "^2.0.5",
+    "image-size": "^1.0.1",
+    "resolve-from": "^5.0.0",
+    "yargs": "^17.4.1"
   }
 }
