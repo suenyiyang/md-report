@@ -1,4 +1,6 @@
 import { readFileSync } from 'fs'
+import { cwd } from 'process'
+import path from 'path'
 import type { IImageOptions, IRunOptions, ParagraphChild } from 'docx'
 import { ImageRun, Paragraph, TextRun } from 'docx'
 import type Token from 'markdown-it/lib/token'
@@ -9,17 +11,18 @@ export function parseInline(props: { tokens: Token[]; style?: StyleId }): Paragr
   // Variables.
   const { tokens, style = StyleId.normal } = props
   const { children: childrenTokens } = tokens[0]
-  const { length } = childrenTokens || []
+  if (!childrenTokens)
+    return new Paragraph({})
   const children: ParagraphChild[] = []
   let pos = 0
   // Parse inline children.
-  while (pos < length) {
-    const { tokens: paragraphChild, offset: nextPos } = sliceInlineText(tokens.slice(pos))
+  while (pos < childrenTokens.length) {
+    const { tokens: paragraphChild, offset: nextPos } = sliceInlineText(childrenTokens.slice(pos))
     if (paragraphChild[0].tag === 'img')
       children.push(parseImage(paragraphChild))
     else
       children.push(parseText(paragraphChild))
-    pos = nextPos
+    pos += nextPos
   }
   return new Paragraph({
     style,
@@ -73,22 +76,24 @@ export function parseText(tokens: Token[]): TextRun {
 }
 
 export function parseImage(tokens: Token[]): ImageRun | TextRun {
-  const { attrGet, content } = tokens[0]
-  const src = attrGet('src')
+  const { attrs, content } = tokens[0]
+  const src = new Map(attrs).get('src')
+  const [name, resolution] = content.split('#')
+  const [x = 100, y = 100] = resolution.split('*')
   if (!src) {
     return new TextRun({
-      text: `[MD Report]: Image ${content} is not found.`,
+      text: `[MD Report]: Image ${name} is not found.`,
       bold: true,
       color: 'red',
       highlight: 'yellow',
     })
   }
   const options: IImageOptions = {
-    data: readFileSync(src).toString('base64'),
+    data: readFileSync(path.resolve(cwd(), src)).toString('base64'),
     // TODO: Replace width and height with config in image url.
     transformation: {
-      width: 100,
-      height: 100,
+      width: Number(x),
+      height: Number(y),
     },
   }
   return new ImageRun(options)

@@ -1,15 +1,16 @@
 import type Token from 'markdown-it/lib/token'
-import { Paragraph, Table, TableCell, TableRow } from 'docx'
+import { Paragraph, Table, TableCell, TableRow, TextRun } from 'docx'
 import { StyleId } from '@md-report/types'
 import { sliceTableRow } from './utils'
 import { parseInline } from './inline'
 
 export function parseFence(tokens: Token[]): Paragraph {
   // Variables.
-  const { content: text } = tokens[0]
+  const { content } = tokens[0]
+  const children = content.split('\n').filter(item => item !== '').map((item, index) => new TextRun({ text: item, break: index ? 1 : 0 }))
   return new Paragraph({
-    style: 'fence',
-    text,
+    style: StyleId.code,
+    children,
   })
 }
 
@@ -43,9 +44,13 @@ export function parseTableRow(tokens: Token[]): TableRow {
 
 export function parseParagraph(tokens: Token[]): Paragraph {
   const inline = tokens.filter(token => token.type === 'inline')
+  let style = StyleId.normal
+  if (inline[0].children?.length === 1 && inline[0].children[0].tag === 'img')
+    style = StyleId.image
+
   return parseInline({
     tokens: inline,
-    style: StyleId.normal,
+    style,
   })
 }
 
