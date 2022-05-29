@@ -44,6 +44,8 @@ export enum StyleId {
   'code' = 'code',
   'header' = 'header',
   'footer' = 'footer',
+  'ol' = 'ol',
+  'ul' = 'ul',
 }
 
 export enum StyleName {
@@ -59,4 +61,6 @@ export enum StyleName {
   'code' = 'Code',
   'header' = 'Header',
   'footer' = 'Footer',
+  'ol' = 'Ordered List',
+  'ul' = 'Unordered List',
 }
