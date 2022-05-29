@@ -2,14 +2,14 @@ import { readFileSync } from 'fs'
 import { cwd } from 'process'
 import path from 'path'
 import type { IImageOptions, IRunOptions, ParagraphChild } from 'docx'
-import { ImageRun, Paragraph, TextRun } from 'docx'
+import { HeadingLevel, ImageRun, Paragraph, TextRun } from 'docx'
 import type Token from 'markdown-it/lib/token'
 import { StyleId } from '@md-report/types'
 import { sliceInlineText } from './utils'
 
-export function parseInline(props: { tokens: Token[]; style?: StyleId }): Paragraph {
+export function parseInline(props: { tokens: Token[]; style?: StyleId; headingLevel?: number }): Paragraph {
   // Variables.
-  const { tokens, style = StyleId.normal } = props
+  const { tokens, style = StyleId.normal, headingLevel = 0 } = props
   const { children: childrenTokens } = tokens[0]
   if (!childrenTokens)
     return new Paragraph({})
@@ -26,6 +26,7 @@ export function parseInline(props: { tokens: Token[]; style?: StyleId }): Paragr
   }
   return new Paragraph({
     style,
+    heading: headingLevel ? HeadingLevel[`HEADING_${headingLevel}` as keyof typeof HeadingLevel] : undefined,
     children,
   })
 }

@@ -1,5 +1,6 @@
 import type Token from 'markdown-it/lib/token'
-import { Paragraph, Table, TableCell, TableRow, TextRun } from 'docx'
+import type { IBorderOptions } from 'docx'
+import { BorderStyle, Paragraph, Table, TableCell, TableRow, TextRun } from 'docx'
 import { StyleId } from '@md-report/types'
 import { sliceTableRow } from './utils'
 import { parseInline } from './inline'
@@ -8,8 +9,19 @@ export function parseFence(tokens: Token[]): Paragraph {
   // Variables.
   const { content } = tokens[0]
   const children = content.split('\n').filter(item => item !== '').map((item, index) => new TextRun({ text: item, break: index ? 1 : 0 }))
+  const border: IBorderOptions = {
+    style: BorderStyle.SINGLE,
+    space: 5,
+    color: '#666666',
+  }
   return new Paragraph({
     style: StyleId.code,
+    border: {
+      top: border,
+      bottom: border,
+      left: border,
+      right: border,
+    },
     children,
   })
 }
@@ -61,6 +73,7 @@ export function parseHeading(tokens: Token[]): Paragraph {
   const { length } = tokens[0].markup
   return parseInline({
     tokens: inline,
+    headingLevel: length,
     style: StyleId[`h${length}` as keyof typeof StyleId],
   })
 }

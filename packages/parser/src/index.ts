@@ -1,8 +1,9 @@
 import type Token from 'markdown-it/lib/token'
 import MarkdownIt from 'markdown-it'
-import type { ISectionOptions, IStylesOptions, Paragraph, Table, TableOfContents } from 'docx'
-import { Document, Packer } from 'docx'
+import type { ISectionOptions, IStylesOptions, Table, TableOfContents } from 'docx'
+import { BorderStyle, Document, Footer, Header, Packer, PageNumber, Paragraph, SectionType, TextRun, convertInchesToTwip } from 'docx'
 import type { IMarkdownReportConfig } from '@md-report/types'
+import { StyleId } from '@md-report/types'
 import { sliceParagraph, sliceSection } from './utils'
 import { paragraphParser } from './paragraph'
 
@@ -34,6 +35,7 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
     pos += offset
   }
   return new Document({
+    evenAndOddHeaderAndFooters: true,
     styles,
     sections,
   })
@@ -51,6 +53,63 @@ export function parseSection(tokens: Token[]): ISectionOptions {
     pos += offset
   }
   return {
+    properties: {
+      type: SectionType.NEXT_PAGE,
+      page: {
+        margin: {
+          top: convertInchesToTwip(1),
+          bottom: convertInchesToTwip(1),
+          left: convertInchesToTwip(1.25),
+          right: convertInchesToTwip(1.25),
+        },
+      },
+    },
+    headers: {
+      default: new Header({
+        children: [new Paragraph({
+          style: StyleId.header,
+          border: {
+            bottom: {
+              color: 'auto',
+              style: BorderStyle.SINGLE,
+              size: 6,
+            },
+          },
+          text: '111',
+        })],
+      }),
+      even: new Header({
+        children: [new Paragraph({
+          style: StyleId.header,
+          border: {
+            bottom: {
+              color: 'auto',
+              style: BorderStyle.SINGLE,
+              size: 6,
+            },
+          },
+          text: '222',
+        })],
+      }),
+    },
+    footers: {
+      default: new Footer({
+        children: [new Paragraph({
+          style: StyleId.footer,
+          children: [new TextRun({
+            children: [PageNumber.CURRENT],
+          })],
+        })],
+      }),
+      even: new Footer({
+        children: [new Paragraph({
+          style: StyleId.footer,
+          children: [new TextRun({
+            children: [PageNumber.CURRENT],
+          })],
+        })],
+      }),
+    },
     children,
   }
 }
