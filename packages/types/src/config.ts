@@ -2,14 +2,32 @@ import type { IStylesOptions } from 'docx'
 
 export interface IMarkdownReportConfig {
   /**
+   * Global style options.
+   */
+  styles: IStylesOptions
+
+  /**
+   * Markdown report config metadata.
+   */
+  meta: IMarkdownReportMeta
+}
+
+export interface IMarkdownReportMeta {
+  /**
    * Creator of the document.
    */
   creator?: string
 
   /**
-   * Global style options.
+   * If the page header should be shown.
+   * @default false
    */
-  styles: IStylesOptions
+  showPageHeader?: boolean
+
+  /**
+   * Page header text.
+   */
+  pageHeaderText?: string
 
 }
 
@@ -22,6 +40,8 @@ export enum StyleId {
   'h5' = 'heading5',
   'h6' = 'heading6',
   'table' = 'table',
+  'image' = 'image',
+  'code' = 'code',
 }
 
 export enum StyleName {
@@ -32,4 +52,7 @@ export enum StyleName {
   'h4' = 'Heading 4',
   'h5' = 'Heading 5',
   'h6' = 'Heading 6',
+  'table' = 'Table',
+  'image' = 'Image',
+  'code' = 'Code',
 }
