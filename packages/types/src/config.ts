@@ -42,6 +42,8 @@ export enum StyleId {
   'table' = 'table',
   'image' = 'image',
   'code' = 'code',
+  'header' = 'header',
+  'footer' = 'footer',
 }
 
 export enum StyleName {
@@ -55,4 +57,6 @@ export enum StyleName {
   'table' = 'Table',
   'image' = 'Image',
   'code' = 'Code',
+  'header' = 'Header',
+  'footer' = 'Footer',
 }
