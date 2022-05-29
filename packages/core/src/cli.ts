@@ -13,12 +13,19 @@ async function cli(props: {
   filename?: string
   theme?: string
 }): Promise<void> {
-  console.log('\x1B[36m%s\x1B[0m', '[Markdown Report]: start...')
+  console.log('\x1B[36m%s\x1B[0m', '[Markdown Report]: Started...')
   const { filename = 'index.md' } = props
-  const file = readFileSync(`${cwd()}/${filename}`)
-  const buffer = await getBuffer({ markdown: file.toString(), config: defaultConfig })
-  writeFileSync(`${cwd()}/My document.docx`, buffer)
-  console.log('\x1B[36m%s\x1B[0m', '[Markdown Report]: finish.')
+  try {
+    const file = readFileSync(`${cwd()}/${filename}`)
+    const buffer = await getBuffer({ markdown: file.toString(), config: defaultConfig })
+    writeFileSync(`${cwd()}/My document.docx`, buffer)
+  }
+  catch (e) {
+    console.log(`[Markdown Report]: ${e}`)
+    console.log('\x1B[36m%s\x1B[0m', '[Markdown Report]: Failed.')
+    return
+  }
+  console.log('\x1B[36m%s\x1B[0m', '[Markdown Report]: Finished.')
 }
 
 cli({ filename: argv.md, theme: argv.theme })
