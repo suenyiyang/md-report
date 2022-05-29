@@ -1,18 +1,25 @@
-import type { IParagraphStyleOptions } from 'docx'
+import type { IStylesOptions } from 'docx'
 
-// Normal paragraphs.
-export type ThemeKey = 'normal' |
-// Heading.
-'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'h7' | 'h8' | 'h9' |
-// Table header and imageFooter.
-'tableHeader' | 'imageFooter' |
-// Title, subtitle, and cover info.
-'title' | 'subtitle' | 'coverInfo' |
-// Content and abstract.
-'contentTitle' | 'abstractTitle' | 'keywords' |
-// Code, mark.
-'code' | 'mark'
+export interface IMarkdownReportConfig {
+  /**
+   * Creator of the document.
+   */
+  creator: string
 
-export interface ThemeConfig extends IParagraphStyleOptions {
-  id: ThemeKey
+  /**
+   * Global style options.
+   */
+  styles: IStylesOptions
+
+}
+
+export enum StyleName {
+  'normal' = 'normal',
+  'h1' = 'heading1',
+  'h2' = 'heading2',
+  'h3' = 'heading3',
+  'h4' = 'heading4',
+  'h5' = 'heading5',
+  'h6' = 'heading6',
+  'table' = 'table',
 }

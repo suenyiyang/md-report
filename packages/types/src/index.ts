@@ -1,2 +1,1 @@
-export * from './types'
-export * from './config'
+export { IMarkdownReportConfig, StyleName } from './config'
