@@ -46,6 +46,7 @@ export enum StyleId {
   'footer' = 'footer',
   'ol' = 'ol',
   'ul' = 'ul',
+  'list' = 'list',
 }
 
 export enum StyleName {
@@ -63,4 +64,5 @@ export enum StyleName {
   'footer' = 'Footer',
   'ol' = 'Ordered List',
   'ul' = 'Unordered List',
+  'list' = 'List',
 }
