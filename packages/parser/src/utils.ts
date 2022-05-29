@@ -1,55 +1,53 @@
-import type { IRunOptions } from 'docx'
-import type { MarkdownItTokenType } from '@md-report/types'
-import Token = require('markdown-it/lib/token')
-import { KAI_TI_FIRA_CODE_FONTS } from './constants'
+import type Token from 'markdown-it/lib/token'
 
-export function getParagraphChildType(token: Token): 'image' | 'text' {
-  switch (token.type) {
-    case 'image':
-      return 'image'
-    default:
-      return 'text'
+export interface SliceResult {
+  tokens: Token[]
+  offset: number
+}
+
+export function sliceSection(tokens: Token[]): SliceResult {
+  let offset = 0
+  if (tokens[0].tag === 'h1') {
+    while (tokens[offset].nesting >= 0 || tokens[offset].tag !== 'h1')
+      offset++
+  }
+  return {
+    tokens: tokens.slice(0, offset + 1),
+    offset: offset + 1,
   }
 }
 
-export function getParagraphChildConfig(tokens: Token[]): IRunOptions {
-  let config: IRunOptions = {}
+export function sliceParagraph(tokens: Token[]): SliceResult {
+  let offset = 0
+  // Code block.
+  if (tokens[0].type !== 'fence') {
+    // Normal paragraphs.
+    while (tokens[offset].level > 0 || tokens[offset].nesting >= 0)
+      offset++
+  }
+  // Return paragraph tokens.
+  return {
+    tokens: tokens.slice(0, offset + 1),
+    offset: offset + 1,
+  }
+}
 
-  for (let i = 0; i < tokens.length; i++) {
-    const token = tokens[i]
-    switch (token.type as MarkdownItTokenType) {
-      case 'em_open': {
-        config = { ...config, italics: true }
-        break
-      }
-      case 'strong_open': {
-        config = { ...config, bold: true }
-        break
-      }
-      case 'mark_open': {
-        config = { ...config, shading: { fill: '#bbbbbb' }, style: 'mark' }
-        break
-      }
-      case 'html_inline': {
-        if (token.content === '<sup>')
-          config = { ...config, superScript: true }
-        if (token.content === '<sub>')
-          config = { ...config, subScript: true }
-        break
-      }
-      case 's_open': {
-        config = { ...config, strike: true }
-        break
-      }
-      case 'code_inline': {
-        config = { ...config, font: KAI_TI_FIRA_CODE_FONTS, style: 'code' }
-        break
-      }
-      case 'text': {
-        config = { ...config, text: token.content }
-      }
+export function sliceTableRow(tokens: Token[]): SliceResult {
+  let offset = 0
+  while (tokens[offset].type !== 'tr_open')
+    offset++
+  return {
+    tokens: tokens.slice(0, offset),
+    offset,
+  }
+}
+
+export function sliceInlineText(tokens: Token[]): SliceResult {
+  if (tokens[0].tag === 'img' || tokens[0].tag === 'code') {
+    return {
+      tokens: tokens.slice(0, 1),
+      offset: 1,
     }
   }
-
-  return config
+  return sliceParagraph(tokens)
 }

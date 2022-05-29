@@ -1,6 +1,6 @@
 # @md-report/parser
 
-Transfer plain markdown text to md-report data structure.
+Transfer plain markdown text to markdown tokens.
 
 ## License
 
