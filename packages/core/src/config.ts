@@ -23,8 +23,8 @@ export const defaultConfig: IMarkdownReportConfig = {
             firstLine: ptToTwip(24),
           },
           spacing: {
-            before: 120,
-            after: 120,
+            before: lineHeightTimesToNumber(0.5),
+            after: lineHeightTimesToNumber(0.5),
             line: lineHeightTimesToNumber(1.5),
           },
           alignment: AlignmentType.JUSTIFIED,
@@ -92,6 +92,20 @@ export const defaultConfig: IMarkdownReportConfig = {
           },
         },
       },
+      // List.
+      {
+        id: StyleId.list,
+        name: StyleName.list,
+        basedOn: StyleId.normal,
+        paragraph: {
+          indent: {
+            firstLine: 0,
+          },
+          spacing: {
+            line: lineHeightTimesToNumber(1),
+          },
+        },
+      },
       // Heading 1.
       {
         id: StyleId.h1,
@@ -107,7 +121,6 @@ export const defaultConfig: IMarkdownReportConfig = {
         },
         paragraph: {
           spacing: {
-            // before: ptToTwip(30),
             after: ptToTwip(30),
           },
           alignment: AlignmentType.CENTER,
