@@ -1,1 +1,1 @@
-export { IMarkdownReportConfig, StyleName } from './config'
+export { IMarkdownReportConfig, StyleName, StyleId } from './config'

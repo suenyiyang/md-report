@@ -4,7 +4,7 @@ export interface IMarkdownReportConfig {
   /**
    * Creator of the document.
    */
-  creator: string
+  creator?: string
 
   /**
    * Global style options.
@@ -13,7 +13,7 @@ export interface IMarkdownReportConfig {
 
 }
 
-export enum StyleName {
+export enum StyleId {
   'normal' = 'normal',
   'h1' = 'heading1',
   'h2' = 'heading2',
@@ -22,4 +22,14 @@ export enum StyleName {
   'h5' = 'heading5',
   'h6' = 'heading6',
   'table' = 'table',
+}
+
+export enum StyleName {
+  'normal' = 'Normal',
+  'h1' = 'Heading 1',
+  'h2' = 'Heading 2',
+  'h3' = 'Heading 3',
+  'h4' = 'Heading 4',
+  'h5' = 'Heading 5',
+  'h6' = 'Heading 6',
 }
