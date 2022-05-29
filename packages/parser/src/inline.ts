@@ -7,25 +7,43 @@ import type Token from 'markdown-it/lib/token'
 import { StyleId } from '@md-report/types'
 import { sliceInlineText } from './utils'
 
-export function parseInline(props: { tokens: Token[]; style?: StyleId; headingLevel?: number }): Paragraph {
-  // Variables.
-  const { tokens, style = StyleId.normal, headingLevel = 0 } = props
-  const { children: childrenTokens } = tokens[0]
+export function parseInline(props: { tokens: Token[]; style?: StyleId; headingLevel?: number; isUL?: boolean; isOL?: boolean }): Paragraph {
+  // Props.
+  const { tokens, style = StyleId.normal, headingLevel = 0, isOL = false, isUL = false } = props
+  const { children: childrenTokens, level } = tokens[0]
   if (!childrenTokens)
     return new Paragraph({})
+  // Numbering.
+  let numbering: {
+    reference: string
+    level: number
+  } | undefined
+  if (isOL) {
+    numbering = {
+      reference: StyleId.ol,
+      level: (level - 1) / 2 - 1,
+    }
+  }
+  else if (isUL) {
+    numbering = {
+      reference: StyleId.ul,
+      level: (level - 1) / 2 - 1,
+    }
+  }
   const children: ParagraphChild[] = []
   let pos = 0
   // Parse inline children.
   while (pos < childrenTokens.length) {
-    const { tokens: paragraphChild, offset: nextPos } = sliceInlineText(childrenTokens.slice(pos))
+    const { tokens: paragraphChild, offset } = sliceInlineText(childrenTokens.slice(pos))
     if (paragraphChild[0].tag === 'img')
       children.push(parseImage(paragraphChild))
     else
       children.push(parseText(paragraphChild))
-    pos += nextPos
+    pos += offset
   }
   return new Paragraph({
     style,
+    numbering,
     heading: headingLevel ? HeadingLevel[`HEADING_${headingLevel}` as keyof typeof HeadingLevel] : undefined,
     children,
   })
@@ -65,7 +83,15 @@ export function parseText(tokens: Token[]): TextRun {
         // Inline code.
         case 'code':
           // TODO: Replace code font with env data.
-          options = { ...options, font: {}, text: token.content }
+          options = {
+            ...options,
+            size: 20,
+            font: {
+              ascii: 'Monaco',
+              eastAsia: 'KaiTi',
+            },
+            text: token.content,
+          }
           break
         // Normal text.
         default:

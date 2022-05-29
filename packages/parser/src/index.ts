@@ -1,7 +1,7 @@
 import type Token from 'markdown-it/lib/token'
 import MarkdownIt from 'markdown-it'
 import type { ISectionOptions, IStylesOptions, Table, TableOfContents } from 'docx'
-import { BorderStyle, Document, Footer, Header, Packer, PageNumber, Paragraph, SectionType, TextRun, convertInchesToTwip } from 'docx'
+import { AlignmentType, BorderStyle, Document, Footer, Header, LevelFormat, Packer, PageNumber, Paragraph, SectionType, TextRun, convertInchesToTwip } from 'docx'
 import type { IMarkdownReportConfig } from '@md-report/types'
 import { StyleId } from '@md-report/types'
 import { sliceParagraph, sliceSection } from './utils'
@@ -35,6 +35,119 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
     pos += offset
   }
   return new Document({
+    numbering: {
+      config: [
+        {
+          reference: StyleId.ul,
+          levels: [
+            {
+              level: 0,
+              format: LevelFormat.BULLET,
+              text: '\u2022',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(0.25), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+            {
+              level: 1,
+              format: LevelFormat.BULLET,
+              text: '\u25E6',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+            {
+              level: 2,
+              format: LevelFormat.BULLET,
+              text: '\u25AA',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(0.75), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+            {
+              level: 3,
+              format: LevelFormat.BULLET,
+              text: '\u25AB',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(1), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+            {
+              level: 4,
+              format: LevelFormat.BULLET,
+              text: '\u2022',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(1.25), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+          ],
+        },
+        {
+          reference: StyleId.ol,
+          levels: [
+            {
+              level: 0,
+              format: LevelFormat.DECIMAL,
+              text: '%1.',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(0.25), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+            {
+              level: 1,
+              format: LevelFormat.LOWER_LETTER,
+              text: '%2)',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+            {
+              level: 2,
+              format: LevelFormat.LOWER_ROMAN,
+              text: '%3.',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(0.75), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+            {
+              level: 3,
+              format: LevelFormat.DECIMAL,
+              text: '(%4)',
+              alignment: AlignmentType.LEFT,
+              style: {
+                paragraph: {
+                  indent: { left: convertInchesToTwip(1), hanging: convertInchesToTwip(0.25) },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
     evenAndOddHeaderAndFooters: true,
     styles,
     sections,
@@ -49,7 +162,11 @@ export function parseSection(tokens: Token[]): ISectionOptions {
   while (pos < tokens.length) {
     const { tokens: paragraph, offset } = sliceParagraph(tokens.slice(pos))
     const parser = paragraphParser[paragraph[0].tag]
-    children.push(parser(paragraph))
+    const parseResult = parser(paragraph)
+    if (Array.isArray(parseResult))
+      children.push(...parseResult)
+    else
+      children.push(parseResult)
     pos += offset
   }
   return {

@@ -54,3 +54,5 @@ export function sliceInlineText(tokens: Token[]): SliceResult {
   }
   return sliceParagraph(tokens)
 }
+
+export const MathBlockRegExp = /^\$\$\n([^]*)\n\$\$$/

@@ -1,8 +1,8 @@
 import type Token from 'markdown-it/lib/token'
 import type { IBorderOptions } from 'docx'
-import { BorderStyle, Paragraph, Table, TableCell, TableRow, TextRun } from 'docx'
+import { BorderStyle, Math, MathRun, Paragraph, Table, TableCell, TableRow, TextRun } from 'docx'
 import { StyleId } from '@md-report/types'
-import { sliceTableRow } from './utils'
+import { MathBlockRegExp, sliceTableRow } from './utils'
 import { parseInline } from './inline'
 
 export function parseFence(tokens: Token[]): Paragraph {
@@ -59,7 +59,19 @@ export function parseParagraph(tokens: Token[]): Paragraph {
   let style = StyleId.normal
   if (inline[0].children?.length === 1 && inline[0].children[0].tag === 'img')
     style = StyleId.image
-
+  // Math blocks.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, mathBlock] = inline[0].content.match(MathBlockRegExp) || []
+  // eslint-disable-next-line no-console
+  console.log(mathBlock)
+  if (mathBlock) {
+    return new Paragraph({
+      style: StyleId.image,
+      children: [new Math({
+        children: [new MathRun(mathBlock)],
+      })],
+    })
+  }
   return parseInline({
     tokens: inline,
     style,
@@ -78,10 +90,27 @@ export function parseHeading(tokens: Token[]): Paragraph {
   })
 }
 
-export const paragraphParser: Record<string, (tokens: Token[]) => (Paragraph|Table)> = {
+export function parseList(type: StyleId.ol | StyleId.ul): (tokens: Token[]) => Paragraph[] {
+  const parser = (tokens: Token[]) => {
+    let pos = 0
+    const children: Paragraph[] = []
+    while (pos < tokens.length) {
+      if (tokens[pos].type === 'inline')
+        children.push(parseInline({ tokens: [tokens[pos]], style: StyleId.list, isUL: type === StyleId.ul, isOL: type === StyleId.ol }))
+      pos++
+    }
+    return children
+  }
+
+  return parser
+}
+
+export const paragraphParser: Record<string, (tokens: Token[]) => (Paragraph | Table | Paragraph[])> = {
   code: parseFence,
   table: parseTable,
   p: parseParagraph,
+  ul: parseList(StyleId.ul),
+  ol: parseList(StyleId.ol),
   h1: parseHeading,
   h2: parseHeading,
   h3: parseHeading,
