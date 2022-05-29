@@ -1,5 +1,6 @@
 import type Token from 'markdown-it/lib/token'
 import { Paragraph, Table, TableCell, TableRow } from 'docx'
+import { StyleId } from '@md-report/types'
 import { sliceTableRow } from './utils'
 import { parseInline } from './inline'
 
@@ -17,9 +18,9 @@ export function parseTable(tokens: Token[]): Table {
   let pos = 0
   const rows: TableRow[] = []
   while (pos < tokens.length) {
-    const { tokens: tableRow, offset: nextPos } = sliceTableRow(tokens.slice(pos))
+    const { tokens: tableRow, offset } = sliceTableRow(tokens.slice(pos))
     rows.push(parseTableRow(tableRow))
-    pos = nextPos
+    pos += offset
   }
   return new Table({
     style: 'table',
@@ -32,7 +33,7 @@ export function parseTableRow(tokens: Token[]): TableRow {
   const children: TableCell[] = cells.map(cell => new TableCell({
     children: [parseInline({
       tokens: [cell],
-      style: 'table',
+      style: StyleId.table,
     })],
   }))
   return new TableRow({
@@ -44,7 +45,7 @@ export function parseParagraph(tokens: Token[]): Paragraph {
   const inline = tokens.filter(token => token.type === 'inline')
   return parseInline({
     tokens: inline,
-    style: 'normal',
+    style: StyleId.normal,
   })
 }
 
@@ -55,7 +56,7 @@ export function parseHeading(tokens: Token[]): Paragraph {
   const { length } = tokens[0].markup
   return parseInline({
     tokens: inline,
-    style: `heading${length}`,
+    style: StyleId[`h${length}` as keyof typeof StyleId],
   })
 }
 

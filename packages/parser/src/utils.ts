@@ -6,24 +6,27 @@ export interface SliceResult {
 }
 
 export function sliceSection(tokens: Token[]): SliceResult {
-  let offset = 0
-  if (tokens[0].tag === 'h1') {
-    while (tokens[offset].nesting >= 0 || tokens[offset].tag !== 'h1')
-      offset++
+  let offset = 1
+  while (offset < tokens.length) {
+    if (tokens[offset].tag === 'h1' && tokens[offset].nesting === 1)
+      break
+    offset++
   }
   return {
-    tokens: tokens.slice(0, offset + 1),
-    offset: offset + 1,
+    tokens: tokens.slice(0, offset),
+    offset,
   }
 }
 
 export function sliceParagraph(tokens: Token[]): SliceResult {
   let offset = 0
-  // Code block.
-  if (tokens[0].type !== 'fence') {
+  if (tokens[0].tag !== 'code') {
     // Normal paragraphs.
-    while (tokens[offset].level > 0 || tokens[offset].nesting >= 0)
+    while (offset < tokens.length) {
+      if (tokens[offset].nesting === -1 && tokens[offset].level === 0)
+        break
       offset++
+    }
   }
   // Return paragraph tokens.
   return {
@@ -34,7 +37,7 @@ export function sliceParagraph(tokens: Token[]): SliceResult {
 
 export function sliceTableRow(tokens: Token[]): SliceResult {
   let offset = 0
-  while (tokens[offset].type !== 'tr_open')
+  while (tokens[offset]?.type !== 'tr_open')
     offset++
   return {
     tokens: tokens.slice(0, offset),

@@ -2,11 +2,12 @@ import { readFileSync } from 'fs'
 import type { IImageOptions, IRunOptions, ParagraphChild } from 'docx'
 import { ImageRun, Paragraph, TextRun } from 'docx'
 import type Token from 'markdown-it/lib/token'
+import { StyleId } from '@md-report/types'
 import { sliceInlineText } from './utils'
 
-export function parseInline(props: { tokens: Token[]; style?: string }): Paragraph {
+export function parseInline(props: { tokens: Token[]; style?: StyleId }): Paragraph {
   // Variables.
-  const { tokens, style = 'normal' } = props
+  const { tokens, style = StyleId.normal } = props
   const { children: childrenTokens } = tokens[0]
   const { length } = childrenTokens || []
   const children: ParagraphChild[] = []
@@ -14,7 +15,7 @@ export function parseInline(props: { tokens: Token[]; style?: string }): Paragra
   // Parse inline children.
   while (pos < length) {
     const { tokens: paragraphChild, offset: nextPos } = sliceInlineText(tokens.slice(pos))
-    if (tokens[0].tag === 'img')
+    if (paragraphChild[0].tag === 'img')
       children.push(parseImage(paragraphChild))
     else
       children.push(parseText(paragraphChild))
