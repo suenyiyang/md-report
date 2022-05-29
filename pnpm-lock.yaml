@@ -58,18 +58,14 @@ importers:
 
   packages/parser:
     specifiers:
+      docx: ^7.3.0
       js-yaml: ^4.1.0
     dependencies:
+      docx: 7.3.0
       js-yaml: 4.1.0
 
   packages/types:
     specifiers: {}
-
-  playground:
-    specifiers:
-      '@md-report/core': workspace:^0.0.1
-    devDependencies:
-      '@md-report/core': link:../packages/core
 
 packages:
 
