@@ -42,7 +42,7 @@ export const defaultConfig: IMarkdownReportConfig = {
       // Code.
       {
         id: StyleId.code,
-        name: StyleId.code,
+        name: StyleName.code,
         basedOn: StyleId.normal,
         run: {
           size: ptToHalfPt(10),
@@ -62,6 +62,36 @@ export const defaultConfig: IMarkdownReportConfig = {
           alignment: AlignmentType.LEFT,
         },
       },
+      // Header.
+      {
+        id: StyleId.header,
+        name: StyleName.header,
+        basedOn: StyleId.normal,
+        run: {
+          size: ptToHalfPt(10.5),
+        },
+        paragraph: {
+          indent: {
+            firstLine: 0,
+          },
+          alignment: AlignmentType.CENTER,
+          spacing: {
+            after: 0,
+            line: lineHeightTimesToNumber(1),
+          },
+        },
+      },
+      // Footer.
+      {
+        id: StyleId.footer,
+        name: StyleName.footer,
+        basedOn: StyleId.header,
+        paragraph: {
+          spacing: {
+            line: lineHeightTimesToNumber(3),
+          },
+        },
+      },
       // Heading 1.
       {
         id: StyleId.h1,
@@ -77,7 +107,7 @@ export const defaultConfig: IMarkdownReportConfig = {
         },
         paragraph: {
           spacing: {
-            before: ptToTwip(30),
+            // before: ptToTwip(30),
             after: ptToTwip(30),
           },
           alignment: AlignmentType.CENTER,

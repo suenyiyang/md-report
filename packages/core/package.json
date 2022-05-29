@@ -24,8 +24,6 @@
   },
   "dependencies": {
     "docx": "^7.3.0",
-    "file-saver": "^2.0.5",
-    "image-size": "^1.0.1",
     "resolve-from": "^5.0.0",
     "yargs": "^17.4.1"
   }
