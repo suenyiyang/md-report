@@ -14,6 +14,10 @@ Writing characters, words and sentences is easy, but it is difficult to handle s
 
 The md-report helps you focus on the content rather than the style of your reports.
 
+## Usage
+
+
+
 ## Acknowledgement
 
 The idea comes from [slidev](https://github.com/slidevjs/slidev), a PowerPoint generator with markdown files.
