@@ -1,13 +1,22 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "target": "ES2017",
+    "module": "ESNext",
     "baseUrl": ".",
+    "target": "ES2016",
+    "lib": ["ESNext"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "@md-report/types": ["./packages/types/src/index.ts"],
       "@md-report/parser": ["./packages/parser/src/index.ts"],
       "@md-report/core": ["./packages/core/src/index.ts"]
-    }
-  }
+    },
+  },
+  "exclude": ["**/dist/**", "node_modules"]
 }
