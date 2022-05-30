@@ -33,6 +33,7 @@ export interface IMarkdownReportMeta {
 
 export enum StyleId {
   'normal' = 'normal',
+  'p' = 'p',
   'h1' = 'heading1',
   'h2' = 'heading2',
   'h3' = 'heading3',
@@ -51,6 +52,7 @@ export enum StyleId {
 
 export enum StyleName {
   'normal' = 'Normal',
+  'p' = 'Paragraph',
   'h1' = 'Heading 1',
   'h2' = 'Heading 2',
   'h3' = 'Heading 3',
