@@ -9,7 +9,7 @@ import { sliceInlineText } from './utils'
 
 export function parseInline(props: { tokens: Token[]; style?: StyleId; headingLevel?: number; isUL?: boolean; isOL?: boolean }): Paragraph {
   // Props.
-  const { tokens, style = StyleId.normal, headingLevel = 0, isOL = false, isUL = false } = props
+  const { tokens, style = StyleId.p, headingLevel = 0, isOL = false, isUL = false } = props
   const { children: childrenTokens, level } = tokens[0]
   if (!childrenTokens)
     return new Paragraph({})

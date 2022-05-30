@@ -1,6 +1,6 @@
 import type Token from 'markdown-it/lib/token'
 import type { IBorderOptions } from 'docx'
-import { BorderStyle, Math, MathRun, Paragraph, Table, TableCell, TableRow, TextRun } from 'docx'
+import { BorderStyle, Math, MathRun, Paragraph, Table, TableCell, TableRow, TextRun, WidthType } from 'docx'
 import { StyleId } from '@md-report/types'
 import { MathBlockRegExp, sliceTableRow } from './utils'
 import { parseInline } from './inline'
@@ -44,6 +44,10 @@ export function parseTable(tokens: Token[]): Table {
 export function parseTableRow(tokens: Token[]): TableRow {
   const cells: Token[] = tokens.filter(token => token.type === 'inline')
   const children: TableCell[] = cells.map(cell => new TableCell({
+    width: {
+      size: 1 / cells.length,
+      type: WidthType.PERCENTAGE,
+    },
     children: [parseInline({
       tokens: [cell],
       style: StyleId.table,

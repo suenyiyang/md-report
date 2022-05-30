@@ -1,7 +1,7 @@
 import type Token from 'markdown-it/lib/token'
 import MarkdownIt from 'markdown-it'
-import type { ISectionOptions, IStylesOptions, Table, TableOfContents } from 'docx'
-import { AlignmentType, BorderStyle, Document, Footer, Header, LevelFormat, Packer, PageNumber, Paragraph, SectionType, TextRun, convertInchesToTwip } from 'docx'
+import type { ISectionOptions, IStylesOptions, Table } from 'docx'
+import { AlignmentType, BorderStyle, Document, Footer, Header, LevelFormat, Packer, PageNumber, Paragraph, SectionType, StyleLevel, TableOfContents, TextRun, convertInchesToTwip } from 'docx'
 import type { IMarkdownReportConfig } from '@md-report/types'
 import { StyleId } from '@md-report/types'
 import { sliceParagraph, sliceSection } from './utils'
@@ -27,7 +27,80 @@ export function parse(props: { markdown: string; config: IMarkdownReportConfig }
 export function parseDocument(tokens: Token[], styles: IStylesOptions): Document {
   // Variables.
   let pos = 0
-  const sections: ISectionOptions[] = []
+  const sections: ISectionOptions[] = [{
+    properties: {
+      type: SectionType.NEXT_PAGE,
+      page: {
+        margin: {
+          top: convertInchesToTwip(1),
+          bottom: convertInchesToTwip(1),
+          left: convertInchesToTwip(1.25),
+          right: convertInchesToTwip(1.25),
+        },
+      },
+    },
+    headers: {
+      default: new Header({
+        children: [new Paragraph({
+          style: StyleId.header,
+          border: {
+            bottom: {
+              color: 'auto',
+              style: BorderStyle.SINGLE,
+              size: 6,
+            },
+          },
+          text: '111',
+        })],
+      }),
+      even: new Header({
+        children: [new Paragraph({
+          style: StyleId.header,
+          border: {
+            bottom: {
+              color: 'auto',
+              style: BorderStyle.SINGLE,
+              size: 6,
+            },
+          },
+          text: '222',
+        })],
+      }),
+    },
+    footers: {
+      default: new Footer({
+        children: [new Paragraph({
+          style: StyleId.footer,
+          children: [new TextRun({
+            children: [PageNumber.CURRENT],
+          })],
+        })],
+      }),
+      even: new Footer({
+        children: [new Paragraph({
+          style: StyleId.footer,
+          children: [new TextRun({
+            children: [PageNumber.CURRENT],
+          })],
+        })],
+      }),
+    },
+    children: [
+      new TableOfContents('TOC', {
+        stylesWithLevels: [
+          new StyleLevel(StyleId.h1, 1),
+          new StyleLevel(StyleId.h2, 2),
+          new StyleLevel(StyleId.h3, 3),
+          new StyleLevel(StyleId.h4, 4),
+          new StyleLevel(StyleId.h5, 5),
+          new StyleLevel(StyleId.h6, 6),
+        ],
+        useAppliedParagraphOutlineLevel: true,
+        hyperlink: true,
+        headingStyleRange: '1-3',
+      }),
+    ],
+  }]
   // Split and parse sections.
   while (pos < tokens.length) {
     const { tokens: section, offset } = sliceSection(tokens.slice(pos))
@@ -147,6 +220,9 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
           ],
         },
       ],
+    },
+    features: {
+      updateFields: true,
     },
     evenAndOddHeaderAndFooters: true,
     styles,

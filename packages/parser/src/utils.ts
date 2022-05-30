@@ -36,9 +36,12 @@ export function sliceParagraph(tokens: Token[]): SliceResult {
 }
 
 export function sliceTableRow(tokens: Token[]): SliceResult {
-  let offset = 0
-  while (tokens[offset]?.type !== 'tr_open')
+  let offset = 1
+  while (offset < tokens.length) {
+    if (tokens[offset].type === 'tr_open')
+      break
     offset++
+  }
   return {
     tokens: tokens.slice(0, offset),
     offset,
