@@ -19,15 +19,23 @@ export const defaultConfig: IMarkdownReportConfig = {
           },
         },
         paragraph: {
-          indent: {
-            firstLine: ptToTwip(24),
-          },
           spacing: {
             before: lineHeightTimesToNumber(0.5),
             after: lineHeightTimesToNumber(0.5),
             line: lineHeightTimesToNumber(1.5),
           },
           alignment: AlignmentType.JUSTIFIED,
+        },
+      },
+      // Paragraph.
+      {
+        id: StyleId.p,
+        name: StyleName.p,
+        basedOn: StyleId.normal,
+        paragraph: {
+          indent: {
+            firstLine: ptToTwip(24),
+          },
         },
       },
       // Image.
@@ -104,6 +112,23 @@ export const defaultConfig: IMarkdownReportConfig = {
           spacing: {
             line: lineHeightTimesToNumber(1),
           },
+        },
+      },
+      // Table.
+      {
+        id: StyleId.table,
+        name: StyleName.table,
+        basedOn: StyleId.normal,
+        run: {},
+        paragraph: {
+          indent: {
+            firstLine: 0,
+          },
+          spacing: {
+            beforeAutoSpacing: true,
+            afterAutoSpacing: true,
+          },
+          alignment: AlignmentType.CENTER,
         },
       },
       // Heading 1.
