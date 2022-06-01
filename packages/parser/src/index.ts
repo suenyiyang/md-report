@@ -27,6 +27,7 @@ export function parse(props: { markdown: string; config: IMarkdownReportConfig }
 export function parseDocument(tokens: Token[], styles: IStylesOptions): Document {
   // Variables.
   let pos = 0
+  // With default content section.
   const sections: ISectionOptions[] = [{
     properties: {
       type: SectionType.NEXT_PAGE,
@@ -50,7 +51,8 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
               size: 6,
             },
           },
-          text: '111',
+          // TODO: replace with i18n value.
+          text: '目录',
         })],
       }),
       even: new Header({
@@ -63,7 +65,8 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
               size: 6,
             },
           },
-          text: '222',
+          // TODO: replace with document title.
+          text: '企业实习中期报告',
         })],
       }),
     },
@@ -234,6 +237,7 @@ export function parseSection(tokens: Token[]): ISectionOptions {
   // Variables.
   let pos = 0
   const children: (Paragraph | Table | TableOfContents)[] = []
+  const { content: sectionHeader = '' } = tokens[1]
   // Split and parse paragraphs.
   while (pos < tokens.length) {
     const { tokens: paragraph, offset } = sliceParagraph(tokens.slice(pos))
@@ -268,7 +272,7 @@ export function parseSection(tokens: Token[]): ISectionOptions {
               size: 6,
             },
           },
-          text: '111',
+          text: sectionHeader,
         })],
       }),
       even: new Header({
@@ -281,7 +285,8 @@ export function parseSection(tokens: Token[]): ISectionOptions {
               size: 6,
             },
           },
-          text: '222',
+          // TODO: replace with document title.
+          text: '企业实习中期报告',
         })],
       }),
     },
