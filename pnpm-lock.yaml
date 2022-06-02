@@ -44,19 +44,25 @@ importers:
 
   packages/core:
     specifiers:
+      '@md-report/parser': workspace:*
+      '@md-report/types': workspace:*
       docx: ^7.3.0
       resolve-from: ^5.0.0
       yargs: ^17.4.1
     dependencies:
+      '@md-report/parser': link:../parser
+      '@md-report/types': link:../types
       docx: 7.3.0
       resolve-from: 5.0.0
       yargs: 17.4.1
 
   packages/parser:
     specifiers:
+      '@md-report/types': workspace:*
       docx: ^7.3.0
       js-yaml: ^4.1.0
     dependencies:
+      '@md-report/types': link:../types
       docx: 7.3.0
       js-yaml: 4.1.0
 
