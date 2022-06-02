@@ -1,6 +1,6 @@
 {
   "name": "@md-report/parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Markdown parser for md-report.",
   "license": "MIT",
   "author": "syy11cn<syy11cn@outlook.com>",
@@ -20,6 +20,7 @@
     "prepublishOnly": "nr build"
   },
   "dependencies": {
+    "@md-report/types": "workspace:*",
     "docx": "^7.3.0",
     "js-yaml": "^4.1.0"
   }

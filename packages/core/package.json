@@ -1,6 +1,6 @@
 {
   "name": "@md-report/core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Write reports in markdown, and get them in docx.",
   "license": "MIT",
   "author": "syy11cn<syy11cn@outlook.com>",
@@ -23,8 +23,8 @@
     "prepublishOnly": "nr build"
   },
   "dependencies": {
-    "@md-report/parser": "workspace",
-    "@md-report/types": "workspace",
+    "@md-report/parser": "workspace:*",
+    "@md-report/types": "workspace:*",
     "docx": "^7.3.0",
     "resolve-from": "^5.0.0",
     "yargs": "^17.4.1"
