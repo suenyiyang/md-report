@@ -1,6 +1,6 @@
 {
   "name": "@md-report/core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Write reports in markdown, and get them in docx.",
   "license": "MIT",
   "author": "syy11cn<syy11cn@outlook.com>",

@@ -1,6 +1,6 @@
 {
   "name": "@md-report/types",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TypeScript definitions for md-report.",
   "license": "MIT",
   "author": "syy11cn<syy11cn@outlook.com>",
