@@ -66,8 +66,6 @@ export function parseParagraph(tokens: Token[]): Paragraph {
   // Math blocks.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, mathBlock] = inline[0].content.match(MathBlockRegExp) || []
-  // eslint-disable-next-line no-console
-  console.log(mathBlock)
   if (mathBlock) {
     return new Paragraph({
       style: StyleId.image,
