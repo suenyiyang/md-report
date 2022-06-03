@@ -60,7 +60,7 @@ export function parseTableRow(tokens: Token[]): TableRow {
 
 export function parseParagraph(tokens: Token[]): Paragraph {
   const inline = tokens.filter(token => token.type === 'inline')
-  let style = StyleId.normal
+  let style = StyleId.p
   if (inline[0].children?.length === 1 && inline[0].children[0].tag === 'img')
     style = StyleId.image
   // Math blocks.
