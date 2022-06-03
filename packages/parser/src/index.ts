@@ -1,6 +1,6 @@
 import type Token from 'markdown-it/lib/token'
 import MarkdownIt from 'markdown-it'
-import type { ISectionOptions, IStylesOptions, Table } from 'docx'
+import type { ISectionOptions, Table } from 'docx'
 import { AlignmentType, BorderStyle, Document, Footer, Header, LevelFormat, Packer, PageNumber, Paragraph, SectionType, StyleLevel, TableOfContents, TextRun, convertInchesToTwip } from 'docx'
 import type { IMarkdownReportConfig } from '@md-report/types'
 import { StyleId } from '@md-report/types'
@@ -17,16 +17,16 @@ export async function getBuffer(props: { markdown: string; config: IMarkdownRepo
 
 export function parse(props: { markdown: string; config: IMarkdownReportConfig }): Document {
   const { markdown, config } = props
-  const { styles } = config
   // Get frontmatter.
   // Get tokens.
   const tokens: Token[] = md.parse(markdown, {})
-  return parseDocument(tokens, styles)
+  return parseDocument(tokens, config)
 }
 
-export function parseDocument(tokens: Token[], styles: IStylesOptions): Document {
+export function parseDocument(tokens: Token[], config: IMarkdownReportConfig): Document {
   // Variables.
   let pos = 0
+  const { styles, meta } = config
   // With default content section.
   const sections: ISectionOptions[] = [{
     properties: {
@@ -66,7 +66,7 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
             },
           },
           // TODO: replace with document title.
-          text: '企业实习中期报告',
+          text: meta.pageHeaderText,
         })],
       }),
     },
@@ -107,7 +107,7 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
   // Split and parse sections.
   while (pos < tokens.length) {
     const { tokens: section, offset } = sliceSection(tokens.slice(pos))
-    sections.push(parseSection(section))
+    sections.push(parseSection(section, config))
     pos += offset
   }
   return new Document({
@@ -233,9 +233,10 @@ export function parseDocument(tokens: Token[], styles: IStylesOptions): Document
   })
 }
 
-export function parseSection(tokens: Token[]): ISectionOptions {
+export function parseSection(tokens: Token[], config: IMarkdownReportConfig): ISectionOptions {
   // Variables.
   let pos = 0
+  const { meta } = config
   const children: (Paragraph | Table | TableOfContents)[] = []
   const { content: sectionHeader = '' } = tokens[1]
   // Split and parse paragraphs.
@@ -286,7 +287,7 @@ export function parseSection(tokens: Token[]): ISectionOptions {
             },
           },
           // TODO: replace with document title.
-          text: '企业实习中期报告',
+          text: meta.pageHeaderText,
         })],
       }),
     },
