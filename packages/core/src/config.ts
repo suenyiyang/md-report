@@ -164,6 +164,7 @@ export const defaultConfig: IMarkdownReportConfig = {
             before: ptToTwip(13),
             after: ptToTwip(13),
           },
+          alignment: AlignmentType.LEFT,
         },
       },
       // Heading 3.
@@ -177,9 +178,14 @@ export const defaultConfig: IMarkdownReportConfig = {
             ascii: 'Times New Roman',
             eastAsia: 'SimSun',
           },
+          bold: false,
         },
         paragraph: {
-          spacing: {},
+          spacing: {
+            before: ptToTwip(10),
+            after: ptToTwip(10),
+          },
+          alignment: AlignmentType.LEFT,
         },
       },
       // Heading 4.
@@ -191,7 +197,10 @@ export const defaultConfig: IMarkdownReportConfig = {
           size: ptToHalfPt(12),
         },
         paragraph: {
-          spacing: {},
+          spacing: {
+            before: ptToTwip(8),
+            after: ptToTwip(8),
+          },
         },
       },
     ],
