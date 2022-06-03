@@ -5,7 +5,7 @@ import type { IImageOptions, IRunOptions, ParagraphChild } from 'docx'
 import { HeadingLevel, ImageRun, Paragraph, TextRun } from 'docx'
 import type Token from 'markdown-it/lib/token'
 import { StyleId } from '@md-report/types'
-import { sliceInlineText } from './utils'
+import { CommentRegExp, sliceInlineText } from './utils'
 
 export function parseInline(props: { tokens: Token[]; style?: StyleId; headingLevel?: number; isUL?: boolean; isOL?: boolean }): Paragraph {
   // Props.
@@ -95,7 +95,9 @@ export function parseText(tokens: Token[]): TextRun {
           break
         // Normal text.
         default:
-          options = { ...options, text: token.content }
+          // No output for comments.
+          if (!token.content.match(CommentRegExp))
+            options = { ...options, text: token.content }
       }
     }
   })

@@ -59,3 +59,5 @@ export function sliceInlineText(tokens: Token[]): SliceResult {
 }
 
 export const MathBlockRegExp = /^\$\$\n([^]*)\n\$\$$/
+
+export const CommentRegExp = /^\<\!\-[^]*\-\>$/
