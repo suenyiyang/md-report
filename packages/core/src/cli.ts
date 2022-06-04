@@ -5,20 +5,23 @@ import yargs from 'yargs'
 import { defaultConfig } from './config'
 
 const argv = yargs(process.argv.slice(2)).options({
-  md: { type: 'string' },
-  theme: { type: 'string' },
+  f: { type: 'string' },
+  c: { type: 'string' },
 }).parseSync()
 
 async function cli(props: {
   filename?: string
-  theme?: string
+  config?: string
 }): Promise<void> {
   console.log('\x1B[36m%s\x1B[0m', '[Markdown Report]: Started...')
-  const { filename = 'index.md' } = props
+  const { filename = 'index.md', config = 'config.json' } = props
   try {
     const file = readFileSync(`${cwd()}/${filename}`)
-    const buffer = await getBuffer({ markdown: file.toString(), config: defaultConfig })
-    writeFileSync(`${cwd()}/My document.docx`, buffer)
+    const cfg = { ...defaultConfig, ...JSON.parse(readFileSync(`${cwd()}/${config}`).toString()) }
+    const output = cfg.meta.pageHeaderText || 'My Document'
+    console.log(cfg)
+    const buffer = await getBuffer({ markdown: file.toString(), config: cfg })
+    writeFileSync(`${cwd()}/${output.replace(/\.docx?$/, '')}.docx`, buffer)
   }
   catch (e) {
     console.log(`[Markdown Report]: ${e}`)
@@ -28,4 +31,4 @@ async function cli(props: {
   console.log('\x1B[36m%s\x1B[0m', '[Markdown Report]: Finished.')
 }
 
-cli({ filename: argv.md, theme: argv.theme })
+cli({ filename: argv.f, config: argv.c })
