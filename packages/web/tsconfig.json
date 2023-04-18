@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    /* Language and Environment */
+    "lib": ["DOM"],
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "rootDir": "./",
+    "baseUrl": "./"
+  }
+}
