@@ -11,6 +11,9 @@
   "devDependencies": {
     "@antfu/eslint-config": "^0.20.2",
     "@antfu/utils": "^0.5.1",
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
+    "@commitlint/types": "^17.4.4",
     "@md-report/core": "workspace:*",
     "@md-report/parser": "workspace:*",
     "@md-report/types": "workspace:*",
@@ -37,6 +40,7 @@
     "*.{js,ts,jsx,tsx,json}": "eslint --fix"
   },
   "simple-git-hooks": {
+    "commit-msg": "npx --no -- commitlint --edit ${1}",
     "pre-commit": "npx lint-staged"
   }
 }
