@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@unocss/reset": "^0.51.4",
+    "antd": "^5.4.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
