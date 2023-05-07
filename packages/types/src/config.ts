@@ -31,6 +31,12 @@ export interface IMarkdownReportMeta {
 
 }
 
+export interface MarkdownReportConfig {
+  documentTitle: string
+
+  fileName: string
+}
+
 export enum StyleId {
   'normal' = 'normal',
   'p' = 'p',

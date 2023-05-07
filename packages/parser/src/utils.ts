@@ -1,4 +1,6 @@
 import type Token from 'markdown-it/lib/token'
+import YAML from 'js-yaml'
+import { isObject } from '@antfu/utils'
 
 export interface SliceResult {
   tokens: Token[]
@@ -58,6 +60,20 @@ export function sliceInlineText(tokens: Token[]): SliceResult {
   return sliceParagraph(tokens)
 }
 
-export const MathBlockRegExp = /^\$\$\n([^]*)\n\$\$$/
+export const MATH_BLOCK_REGEXP = /^\$\$\n([^]*)\n\$\$$/
 
-export const CommentRegExp = /^\<\!\-[^]*\-\>$/
+export const COMMENT_REGEXP = /^\<\!\-[^]*\-\>$/
+
+export const matter = (code: string) => {
+  let data: any = {}
+  const content = code.replace(/^---.*\r?\n([\s\S]*?)---/,
+    (_, d) => {
+      data = YAML.load(d)
+      if (!isObject(data))
+        data = {}
+      return ''
+    })
+  return { data, content }
+}
+
+export const HEADING_REGEXP = /^(#+) (.*)$/m

@@ -1,122 +1,220 @@
-import type Token from 'markdown-it/lib/token'
-import type { IBorderOptions } from 'docx'
-import { BorderStyle, Math, MathRun, Paragraph, Table, TableCell, TableRow, TextRun, WidthType } from 'docx'
-import { StyleId } from '@md-report/types'
-import { MathBlockRegExp, sliceTableRow } from './utils'
-import { parseInline } from './inline'
+import type { CodeBlock, CodeText, Heading, Image, NormalParagraph, OrderedList, Paragraph, Table, Tex, Text, UnorderedList } from '@md-report/types'
+import { ParagraphType, TextType } from '@md-report/types'
+import MarkdownIt from 'markdown-it'
+import { parseCodeText, parseImage as parseInlineImage, parseText } from './text'
+import { HEADING_REGEXP, MATH_BLOCK_REGEXP, sliceInlineText } from './utils'
 
-export function parseFence(tokens: Token[]): Paragraph {
-  // Variables.
-  const { content } = tokens[0]
-  const children = content.split('\n').filter(item => item !== '').map((item, index) => new TextRun({ text: item, break: index ? 1 : 0 }))
-  const border: IBorderOptions = {
-    style: BorderStyle.SINGLE,
-    space: 5,
-    color: '#666666',
-  }
-  return new Paragraph({
-    style: StyleId.code,
-    border: {
-      top: border,
-      bottom: border,
-      left: border,
-      right: border,
-    },
-    children,
-  })
-}
+const md = new MarkdownIt()
 
-export function parseTable(tokens: Token[]): Table {
-  // Variables
-  let pos = 0
-  const rows: TableRow[] = []
-  while (pos < tokens.length) {
-    const { tokens: tableRow, offset } = sliceTableRow(tokens.slice(pos))
-    rows.push(parseTableRow(tableRow))
-    pos += offset
-  }
-  return new Table({
-    style: 'table',
-    rows,
-  })
-}
+type ParagraphParser<T = NormalParagraph> = (raw: string) => T
 
-export function parseTableRow(tokens: Token[]): TableRow {
-  const cells: Token[] = tokens.filter(token => token.type === 'inline')
-  const children: TableCell[] = cells.map(cell => new TableCell({
-    width: {
-      size: 1 / cells.length,
-      type: WidthType.PERCENTAGE,
-    },
-    children: [parseInline({
-      tokens: [cell],
-      style: StyleId.table,
-    })],
-  }))
-  return new TableRow({
-    children,
-  })
-}
+const parseNormal: ParagraphParser = (raw) => {
+  const tokens = md.parseInline(raw, {})[0].children ?? []
 
-export function parseParagraph(tokens: Token[]): Paragraph {
-  const inline = tokens.filter(token => token.type === 'inline')
-  let style = StyleId.p
-  if (inline[0].children?.length === 1 && inline[0].children[0].tag === 'img')
-    style = StyleId.image
-  // Math blocks.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, mathBlock] = inline[0].content.match(MathBlockRegExp) || []
-  if (mathBlock) {
-    return new Paragraph({
-      style: StyleId.image,
-      children: [new Math({
-        children: [new MathRun(mathBlock)],
-      })],
-    })
-  }
-  return parseInline({
-    tokens: inline,
-    style,
-  })
-}
+  const children: Text[] = []
 
-export function parseHeading(tokens: Token[]): Paragraph {
-  // Inline token.
-  const inline = tokens.filter(token => token.type === 'inline')
-  // Heading level.
-  const { length } = tokens[0].markup
-  return parseInline({
-    tokens: inline,
-    headingLevel: length,
-    style: StyleId[`h${length}` as keyof typeof StyleId],
-  })
-}
+  const start = 0
 
-export function parseList(type: StyleId.ol | StyleId.ul): (tokens: Token[]) => Paragraph[] {
-  const parser = (tokens: Token[]) => {
-    let pos = 0
-    const children: Paragraph[] = []
-    while (pos < tokens.length) {
-      if (tokens[pos].type === 'inline')
-        children.push(parseInline({ tokens: [tokens[pos]], style: StyleId.list, isUL: type === StyleId.ul, isOL: type === StyleId.ol }))
-      pos++
+  const slice = (end: number, type: TextType) => {
+    if (type === TextType.Image) {
+      children.push({
+        ...parseInlineImage(tokens.slice(start, end)),
+      })
     }
-    return children
+    else {
+      children.push({
+        ...parseText(tokens.slice(start, end), raw),
+      })
+    }
   }
 
-  return parser
+  for (let i = 0; i < tokens.length; i++) {
+    const { tokens: childTokens, offset } = sliceInlineText(tokens.slice(i))
+    i += offset
+    if (childTokens[0].tag === 'img')
+      slice(i, TextType.Image)
+    else
+      slice(i, TextType.Normal)
+  }
+
+  return {
+    raw,
+    type: ParagraphType.Normal,
+    children,
+  }
 }
 
-export const paragraphParser: Record<string, (tokens: Token[]) => (Paragraph | Table | Paragraph[])> = {
-  code: parseFence,
-  table: parseTable,
-  p: parseParagraph,
-  ul: parseList(StyleId.ul),
-  ol: parseList(StyleId.ol),
-  h1: parseHeading,
-  h2: parseHeading,
-  h3: parseHeading,
-  h4: parseHeading,
-  h5: parseHeading,
-  h6: parseHeading,
+const parseCodeBlock: ParagraphParser<CodeBlock> = (raw) => {
+  const match = raw.match(/^```(\w*)?(\[([\s\S]*)\])?\n([\s\S]*)\n```$/m)
+  const language = match?.[1] ?? ''
+  const title = match?.[3]
+  const code = match?.[4] ?? ''
+
+  const children: CodeText[] = []
+  const lines = code.split(/\r?\n/g)
+
+  for (const [index, line] of lines.entries()) {
+    const text = {
+      ...parseCodeText(line),
+      lineNumber: index + 1,
+    }
+
+    children.push(text)
+  }
+
+  return {
+    raw,
+    title,
+    type: ParagraphType.CodeBlock,
+    language,
+    children,
+  }
+}
+
+const parseHeading: ParagraphParser<Heading> = (raw) => {
+  const match = raw.match(HEADING_REGEXP)
+  const level = match?.[1].length ?? 1
+
+  const { children } = parseNormal(match?.[2] ?? '')
+
+  return {
+    raw,
+    type: ParagraphType.Heading,
+    level,
+    children,
+  }
+}
+
+const parseOrderedList: ParagraphParser<OrderedList> = (raw) => {
+  const lines = raw.split(/\r?\n/g)
+  const children: Text[][] = []
+
+  for (const line of lines) {
+    const content = line.replace(/^\d+\.\s/, '')
+    const { children: textChildren } = parseNormal(content)
+    children.push([...textChildren])
+  }
+
+  return {
+    raw,
+    type: ParagraphType.OrderedList,
+    children,
+  }
+}
+
+const parseUnorderedList: ParagraphParser<UnorderedList> = (raw) => {
+  const lines = raw.split(/\r?\n/g)
+  const children: Text[][] = []
+
+  for (const line of lines) {
+    const content = line.replace(/^[\-|\+|\*]\s/, '')
+    const { children: textChildren } = parseNormal(content)
+    children.push([...textChildren])
+  }
+
+  return {
+    raw,
+    type: ParagraphType.UnorderedList,
+    children,
+  }
+}
+
+const parseTable: ParagraphParser<Table> = (raw) => {
+  const lines = raw.split(/\r?\n/g)
+  // match text between [[ and ]]
+  const matchTableTitle = lines[0].match(/\[\[([\s\S]*)\]\]/m)
+  const title = matchTableTitle?.[1] ?? ''
+
+  const rows = matchTableTitle ? lines.slice(1) : lines
+
+  const children: Text[][][] = []
+
+  for (const row of rows) {
+    const cells = row.split('|').map(cell => cell.trim())
+    const textChildren: Text[][] = []
+
+    // remove first and last empty cell
+    cells.pop()
+    cells.shift()
+
+    // skip empty row
+    if (cells.every(cell => cell.includes('---')))
+      continue
+
+    for (const cell of cells) {
+      const { children: cellChildren } = parseNormal(cell)
+      textChildren.push([...cellChildren])
+    }
+
+    children.push(textChildren)
+  }
+
+  return {
+    type: ParagraphType.Table,
+    raw,
+    title,
+    children,
+  }
+}
+
+const parseTex: ParagraphParser<Tex> = (raw) => {
+  const match = raw.match(MATH_BLOCK_REGEXP)
+
+  const content = match?.[1] ?? ''
+
+  return {
+    raw,
+    type: ParagraphType.Tex,
+    children: {
+      raw: content,
+      content,
+      type: [TextType.Math],
+    },
+  }
+}
+
+const parseImage: ParagraphParser<Image> = (raw) => {
+  const match = raw.match(/\!\[([\s\S]*)\]\(([\s\S]*)\)/m)
+  const title = match?.[1] ?? ''
+  const src = match?.[2] ?? ''
+
+  return {
+    raw,
+    type: ParagraphType.Image,
+    title,
+    children: {
+      raw,
+      type: [TextType.Image],
+      content: src,
+    },
+  }
+}
+
+export const parseParagraph = (raw: string, type: ParagraphType = ParagraphType.Normal): Paragraph => {
+  switch (type) {
+    case ParagraphType.CodeBlock:
+      return parseCodeBlock(raw)
+
+    case ParagraphType.Heading:
+      return parseHeading(raw)
+
+    case ParagraphType.OrderedList:
+      return parseOrderedList(raw)
+
+    case ParagraphType.UnorderedList:
+      return parseUnorderedList(raw)
+
+    case ParagraphType.Table:
+      return parseTable(raw)
+
+    case ParagraphType.Tex:
+      return parseTex(raw)
+
+    case ParagraphType.Image:
+      return parseImage(raw)
+
+    case ParagraphType.Normal:
+    default:
+      return parseNormal(raw)
+  }
 }
