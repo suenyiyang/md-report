@@ -1,4 +1,4 @@
-import type { CodeBlock, CodeText, Heading, Image, NormalParagraph, OrderedList, Paragraph, Table, Tex, Text, UnorderedList } from '@md-report/types'
+import type { CodeBlock, CodeText, Heading, Image, ListChild, NormalParagraph, OrderedList, Paragraph, Table, Tex, Text, UnorderedList } from '@md-report/types'
 import { ParagraphType, TextType } from '@md-report/types'
 import MarkdownIt from 'markdown-it'
 import { parseCodeText, parseImage as parseInlineImage, parseText } from './text'
@@ -87,12 +87,20 @@ const parseHeading: ParagraphParser<Heading> = (raw) => {
 
 const parseOrderedList: ParagraphParser<OrderedList> = (raw) => {
   const lines = raw.split(/\r?\n/g)
-  const children: Text[][] = []
+  const children: ListChild[] = []
 
   for (const line of lines) {
-    const content = line.replace(/^\d+\.\s/, '')
-    const { children: textChildren } = parseNormal(content)
-    children.push([...textChildren])
+    const content = line.trimStart().replace(/^\d+\.\s/, '')
+    const { children: text } = parseNormal(content)
+    const indent = line.match(/^\s*/)?.[0].length ?? 0
+    const level = parseInt(String(indent / 2))
+
+    const listChild: ListChild = {
+      level,
+      text,
+    }
+
+    children.push(listChild)
   }
 
   return {
@@ -104,12 +112,21 @@ const parseOrderedList: ParagraphParser<OrderedList> = (raw) => {
 
 const parseUnorderedList: ParagraphParser<UnorderedList> = (raw) => {
   const lines = raw.split(/\r?\n/g)
-  const children: Text[][] = []
+  const children: ListChild[] = []
 
   for (const line of lines) {
-    const content = line.replace(/^[\-|\+|\*]\s/, '')
-    const { children: textChildren } = parseNormal(content)
-    children.push([...textChildren])
+    const content = line.trimStart().replace(/^[\-|\+|\*]\s/, '')
+    const { children: text } = parseNormal(content)
+
+    const indent = line.match(/^\s*/)?.[0].length ?? 0
+    const level = parseInt(String(indent / 2))
+
+    const listChild: ListChild = {
+      level,
+      text,
+    }
+
+    children.push(listChild)
   }
 
   return {
@@ -183,7 +200,7 @@ const parseImage: ParagraphParser<Image> = (raw) => {
     type: ParagraphType.Image,
     title,
     children: {
-      raw,
+      raw: title,
       type: [TextType.Image],
       content: src,
     },

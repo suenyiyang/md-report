@@ -13,6 +13,7 @@ export enum TextType {
   Highlight = 'highlight',
   Strikethrough = 'strikethrough',
   Normal = 'normal',
+  Underline = 'underline',
 }
 
 export interface Text extends Base {
@@ -23,4 +24,9 @@ export interface Text extends Base {
 
 export interface CodeText extends Text {
   lineNumber: number
+}
+
+export interface ListChild {
+  text: Text[]
+  level: number
 }

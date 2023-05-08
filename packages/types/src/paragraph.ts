@@ -1,5 +1,5 @@
 import type { Base } from './document'
-import type { CodeText, Text } from './text'
+import type { CodeText, ListChild, Text } from './text'
 
 export enum ParagraphType {
   Normal = 'normal',
@@ -32,12 +32,12 @@ export interface Heading extends Base {
 
 export interface OrderedList extends Base {
   type: ParagraphType.OrderedList
-  children: Text[][]
+  children: ListChild[]
 }
 
 export interface UnorderedList extends Base {
   type: ParagraphType.UnorderedList
-  children: Text[][]
+  children: ListChild[]
 }
 
 export interface Table extends Base {

@@ -54,6 +54,11 @@ export enum StyleId {
   'ol' = 'ol',
   'ul' = 'ul',
   'list' = 'list',
+  ImageTitle = 'image_title',
+  TableTitle = 'table_title',
+  TableContent = 'table_content',
+  Math = 'math',
+  CodeContent = 'code_content',
 }
 
 export enum StyleName {
