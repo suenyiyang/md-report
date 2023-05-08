@@ -67,12 +67,12 @@ export const generateImageImpl = async(originImageConfig: Text): Promise<Docx.Pa
   // local image
   if (src.match(/^(\.+)?[\\|\/]/m)) {
     const path = resolve(cwd(), src)
-    data = readFileSync(path)
+    data = Uint8Array.from(readFileSync(path))
   }
   // image from network
   else if (src.match(/^https?:\/\//m)) {
     const response = await axios.get(src, { responseType: 'arraybuffer' })
-    data = Buffer.from(response.data, 'utf-8')
+    data = Uint8Array.from(response.data)
   }
   // unsupported image path
   else {

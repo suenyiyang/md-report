@@ -26,7 +26,6 @@
     "@md-report/parser": "workspace:*",
     "@md-report/types": "workspace:*",
     "axios": "^1.4.0",
-    "docx": "^7.3.0",
     "resolve-from": "^5.0.0",
     "yargs": "^17.4.1"
   }

@@ -8,6 +8,9 @@
     "packages/*",
     "playground"
   ],
+  "dependencies": {
+    "docx": "^8.0.4"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.20.2",
     "@antfu/utils": "^0.5.1",
@@ -22,7 +25,6 @@
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^17.0.23",
     "@types/yargs": "^17.0.10",
-    "docx": "^7.3.0",
     "eslint": "^8.13.0",
     "lint-staged": "^13.2.2",
     "markdown-it": "^12.3.2",

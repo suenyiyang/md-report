@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@md-report/types": "workspace:*",
-    "docx": "^7.3.0",
     "js-yaml": "^4.1.0"
   }
 }
