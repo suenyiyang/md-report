@@ -77,3 +77,5 @@ export const matter = (code: string) => {
 }
 
 export const HEADING_REGEXP = /^(#+) (.*)$/m
+
+export const isTableWithTitle = (line: string, next: string) => line.match(/\[\[([\s\S]*)\]\]/m) && next.match(/^\|[\s\S]*\|$/g)

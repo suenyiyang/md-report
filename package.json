@@ -9,7 +9,9 @@
     "playground"
   ],
   "dependencies": {
-    "docx": "^8.0.4"
+    "docx": "^8.0.4",
+    "markdown-it": "^13.0.1",
+    "unocss": "^0.51.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.20.2",
@@ -27,8 +29,6 @@
     "@types/yargs": "^17.0.10",
     "eslint": "^8.13.0",
     "lint-staged": "^13.2.2",
-    "markdown-it": "^12.3.2",
-    "markdown-it-katex": "^2.0.3",
     "rimraf": "^3.0.2",
     "simple-git-hooks": "^2.8.1",
     "tsup": "^5.12.5",

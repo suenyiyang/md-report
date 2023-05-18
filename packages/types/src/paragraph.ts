@@ -4,6 +4,7 @@ import type { CodeText, ListChild, Text } from './text'
 export enum ParagraphType {
   Normal = 'normal',
   CodeBlock = 'code_block',
+  Mermaid = 'mermaid',
   Table = 'table',
   Heading = 'heading',
   OrderedList = 'ordered_list',
@@ -22,6 +23,11 @@ export interface CodeBlock extends Base {
   title?: string
   language: string
   children: CodeText[]
+}
+
+export interface Mermaid extends Base {
+  type: ParagraphType.Mermaid
+  children: string
 }
 
 export interface Heading extends Base {
@@ -57,4 +63,4 @@ export interface Image extends Base {
   children: Text
 }
 
-export type Paragraph = NormalParagraph | CodeBlock | Heading | OrderedList | UnorderedList | Table | Tex | Image
+export type Paragraph = NormalParagraph | CodeBlock | Heading | OrderedList | UnorderedList | Table | Tex | Image | Mermaid

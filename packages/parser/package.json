@@ -15,12 +15,13 @@
     }
   },
   "scripts": {
-    "build": "rimraf dist && tsup src/*.ts --format cjs,esm --dts --splitting --no-shims",
+    "build": "rimraf dist && tsup src/index.ts --format cjs,esm --splitting --dts --shims",
     "dev": "nr build --watch",
     "prepublishOnly": "nr build"
   },
   "dependencies": {
     "@md-report/types": "workspace:*",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "markdown-it": "^13.0.1"
   }
 }

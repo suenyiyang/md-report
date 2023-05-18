@@ -1,4 +1,4 @@
-import type { CodeBlock, CodeText, Heading, Image, ListChild, NormalParagraph, OrderedList, Paragraph, Table, Tex, Text, UnorderedList } from '@md-report/types'
+import type { CodeBlock, CodeText, Heading, Image, ListChild, Mermaid, NormalParagraph, OrderedList, Paragraph, Table, Tex, Text, UnorderedList } from '@md-report/types'
 import { ParagraphType, TextType } from '@md-report/types'
 import MarkdownIt from 'markdown-it'
 import { parseCodeText, parseImage as parseInlineImage, parseText } from './text'
@@ -40,6 +40,17 @@ const parseNormal: ParagraphParser = (raw) => {
   return {
     raw,
     type: ParagraphType.Normal,
+    children,
+  }
+}
+
+const parseMermaid: ParagraphParser<Mermaid> = (raw) => {
+  const match = raw.match(/^```mermaid\n([\s\S]*)\n```$/m)
+  const children = match?.[1] ?? ''
+
+  return {
+    raw,
+    type: ParagraphType.Mermaid,
     children,
   }
 }
@@ -115,7 +126,7 @@ const parseUnorderedList: ParagraphParser<UnorderedList> = (raw) => {
   const children: ListChild[] = []
 
   for (const line of lines) {
-    const content = line.trimStart().replace(/^[\-|\+|\*]\s/, '')
+    const content = line.trimStart().replace(/^(\-|\+|\*)\s/, '')
     const { children: text } = parseNormal(content)
 
     const indent = line.match(/^\s*/)?.[0].length ?? 0
@@ -209,6 +220,9 @@ const parseImage: ParagraphParser<Image> = (raw) => {
 
 export const parseParagraph = (raw: string, type: ParagraphType = ParagraphType.Normal): Paragraph => {
   switch (type) {
+    case ParagraphType.Mermaid:
+      return parseMermaid(raw)
+
     case ParagraphType.CodeBlock:
       return parseCodeBlock(raw)
 

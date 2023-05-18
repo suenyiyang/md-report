@@ -6,7 +6,6 @@ export enum TextType {
   InlineCode = 'inline_code',
   Link = 'link',
   Image = 'image',
-  Delete = 'delete',
   Math = 'math',
   Subscript = 'subscript',
   Superscript = 'superscript',

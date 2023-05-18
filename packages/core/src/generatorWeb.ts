@@ -1,6 +1,3 @@
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
-import { cwd } from 'process'
 import type { CodeBlock, Document, Heading, Image, NormalParagraph, OrderedList, Paragraph, Section, Table, Tex, Text, UnorderedList } from '@md-report/types'
 import { ParagraphType, StyleId, TextType } from '@md-report/types'
 import * as Docx from 'docx'
@@ -8,11 +5,6 @@ import axios from 'axios'
 import { getSectionConfig } from './configs/section'
 import { getDocumentConfig } from './configs/document'
 import { ptToTwip } from './utils'
-
-export const getBuffer = (docxDocument: Docx.Document): Promise<Buffer> => {
-  const buffer = Docx.Packer.toBuffer(docxDocument)
-  return buffer
-}
 
 export const getBlob = async(docxDocument: Docx.Document): Promise<Blob> => {
   const blob = Docx.Packer.toBlob(docxDocument)
@@ -80,9 +72,7 @@ export const generateImageImpl = async(originImageConfig: Text): Promise<Docx.Pa
 
   // local image
   if (src.match(/^(\.+)?[\\|\/]/m)) {
-    const path = resolve(cwd(), src)
-    data = Uint8Array.from(readFileSync(path))
-    // return new Docx.TextRun({ text: name })
+    return new Docx.TextRun({ text: name })
   }
   // image from network
   else if (src.match(/^https?:\/\//m)) {

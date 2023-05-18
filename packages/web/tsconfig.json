@@ -2,10 +2,14 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     /* Language and Environment */
-    "lib": ["DOM"],
+    "lib": ["ESNext", "DOM"],
     "jsx": "react-jsx",
-    "module": "ESNext",
+    "module": "CommonJS",
     "rootDir": "./",
-    "baseUrl": "./"
-  }
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "types": ["vite/client"]
+  },
 }

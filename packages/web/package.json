@@ -8,19 +8,25 @@
     "dev": "vite"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
+    "@md-report/core": "workspace:*",
+    "@md-report/parser": "workspace:*",
     "@unocss/reset": "^0.51.4",
     "antd": "^5.4.6",
+    "file-saver": "^2.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.10.0",
-    "unocss": "^0.51.4"
+    "react-router-dom": "^6.10.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "@types/react-router-dom": "^5.3.3",
+    "@unocss/preset-attributify": "^0.51.12",
     "@vitejs/plugin-react": "^3.1.0",
     "typescript": "^5.0.4",
-    "vite": "^4.2.1"
+    "vite": "^4.2.1",
+    "vite-plugin-svgr": "^3.2.0",
+    "vite-tsconfig-paths": "^4.2.0"
   }
 }
