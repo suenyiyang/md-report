@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "dev": "pnpm -r --filter=./packages/** --parallel run dev",
-    "build": "pnpm -r --filter=./packages/** --parallel run build",
+    "dev": "pnpm -r --filter=./packages/** run dev",
+    "build": "pnpm -r --filter=./packages/** run build",
     "test": "vitest test"
   },
   "workspaces": [
