@@ -2,4 +2,4 @@
 
 publish = "packages/web/dist"
 
-command = "npm run build"
+command = "cd packages/web && npm run build"
