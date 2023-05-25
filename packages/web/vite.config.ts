@@ -11,4 +11,7 @@ export default defineConfig({
     UnoCSS(),
     ViteTsconfigPaths(),
   ],
+  css: {
+    modules: {},
+  },
 })

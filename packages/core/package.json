@@ -12,13 +12,18 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./generatorWeb": {
+      "import": "./dist/generatorWeb.mjs",
+      "require": "./dist/generatorWeb.js",
+      "types": "./dist/generatorWeb.d.ts"
     }
   },
   "bin": {
     "mdreport": "./bin/index.js"
   },
   "scripts": {
-    "build": "rimraf dist && tsup src/index.ts src/cli.ts --format cjs,esm --dts --splitting --no-shims",
+    "build": "rimraf dist && tsup src/index.ts src/cli.ts src/generatorWeb.ts --format cjs,esm --dts --splitting --no-shims",
     "dev": "nr build --watch",
     "prepublishOnly": "nr build"
   },

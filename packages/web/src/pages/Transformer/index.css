@@ -1,0 +1,13 @@
+@media screen and (max-width: 768px) {
+  .hideOnPhone {
+    display: none;
+  }
+  .main {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .footerbar {
+    padding: 0 5%;
+  }
+}
+

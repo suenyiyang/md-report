@@ -38,6 +38,9 @@ export const FooterButton: FC<FooterButtonProps> = (props) => {
           下一步
         </Button>
       )}
+      {!hasNextStep() && (
+        <Button size="large" ml-2 type="primary" onClick={onFinish}>下载文档</Button>
+      )}
     </div>
   )
 }
