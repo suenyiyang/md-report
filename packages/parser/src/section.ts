@@ -62,7 +62,7 @@ export const parseSection = (raw: string): Section => {
     // ul
     else if (line.match(/^\-|\+|\* [\s\S]*$/g)) {
       for (i; i < lines.length; i++) {
-        if (!lines[i + 1].trimStart().match(/^\-|\+|\* [\s\S]*$/g))
+        if (!lines[i + 1]?.trimStart().match(/^\-|\+|\* [\s\S]*$/g))
           break
       }
       slice(i, ParagraphType.UnorderedList)
@@ -70,7 +70,7 @@ export const parseSection = (raw: string): Section => {
     // ol
     else if (line.match(/^\d+\. [\s\S]*$/g)) {
       for (i; i < lines.length; i++) {
-        if (!lines[i + 1].trimStart().match(/^\d+\. [\s\S]*$/g))
+        if (!lines[i + 1]?.trimStart().match(/^\d+\. [\s\S]*$/g))
           break
       }
       slice(i, ParagraphType.OrderedList)
@@ -83,7 +83,7 @@ export const parseSection = (raw: string): Section => {
     // table with title
     else if (line.match(/^\|[\s\S]*\|$/g) || isTableWithTitle(line, lines[i + 1])) {
       for (i; i < lines.length; i++) {
-        if (!lines[i + 1].trimStart().match(/^\|[\s\S]*\|$/g))
+        if (!lines[i + 1]?.trimStart().match(/^\|[\s\S]*\|$/g))
           break
       }
       slice(i, ParagraphType.Table)

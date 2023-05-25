@@ -5,7 +5,8 @@
   "license": "MIT",
   "author": "Yiyang Sun",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
